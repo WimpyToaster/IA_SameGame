@@ -1,5 +1,6 @@
 from search import *
 from utils import *
+from copy import deepcopy
 
 # TAI color 
 # sem cor = 0 
@@ -65,6 +66,19 @@ def board_aux_find_group(board, curList, y, x, color):
 def print_board(board):
 	for x in board:
 		print(x)
+	
+def board_gravity(board):
+	bl = len(board)
+	for x in range(len(board[0])):
+		i = len(board) - 2
+		while i >= 0:
+			if(i + 1 < bl and color(board[i][x]) and no_color(board[i+1][x])):
+				board[i+1][x] = board[i][x]
+				board[i][x]   = get_no_color()
+				i += 1
+			else:
+				i -= 1
+	return board
 
 def board_move_side(board):
  
@@ -81,7 +95,7 @@ def board_move_side(board):
  		return board
  
  
- 	for y in range(colunas_zero[0], ult_linha):
+ 	for y in range(colunas_zero[0], len(board[0]) - 1):
  		for i in range(1, len(board[0]) - y):
  			if (board[ult_linha][y+i] != 0):
  				for x in range(ult_linha + 1):
@@ -89,24 +103,7 @@ def board_move_side(board):
  					board[x][y+i] = 0
  				break
  					
- 		
  	return board
- 
-	
-def board_gravity(board):
-	bl = len(board)
-	for x in range(len(board[0])):
-		i = len(board) - 2
-		while i >= 0:
-			if(i + 1 < bl and color(board[i][x]) and no_color(board[i+1][x])):
-				board[i+1][x] = board[i][x]
-				board[i][x]   = get_no_color()
-				i += 1
-			else:
-				i -= 1
-	return board
-
-
  
 def board_remove_group(board, group):
 
@@ -147,6 +144,13 @@ class sg_state:
 		if isinstance(other, sg_state):
 			return self.board == other.board
 
+	def __lt__(self, other):
+		if isinstance(other, sg_state):
+			return True
+
+	def __hash__(self):
+		return hash("I GIVE UP, THIS SUCKS")
+
 class same_game(Problem):
 
 	def __init__(self, board):
@@ -160,27 +164,16 @@ class same_game(Problem):
 
 	#def path_cost(self, c, state1, action, state2):
 
-	#def h(self, node):
+	def h(self, node):
+		return len(board_find_groups(node.state.board))
+		#return 1
 
 	def result(self, state, action):
-		return sg_state(board_remove_group(state.board, action))
+		return sg_state(board_remove_group(deepcopy(state.board), action))
 
-
-print(depth_first_tree_search(same_game([[3,1,3,2],[1,1,1,3],[1,3,2,1],[1,1,3,3],[3,3,1,2],[2,2,2,2],[3,1,2,3],[2,3,2,3],[2,1,1,3],[2,3,1,2]])).state.board)
-board = [[0, 0, 0, 0],[0, 0, 0, 0],[0, 0, 0, 0],[0, 0, 0, 0],[0, 0, 0, 0],[0, 0, 0, 0],[0, 0, 0, 0],[0, 0, 2, 0],[0, 0, 1, 0],[3, 2, 2, 0]]
-state1 = sg_state(board)
-game = same_game(board)
-#pb(board)
-#print()
-#print(game.actions(state1))
-#state2 = (game.result(state1, game.actions(state1)[0]))
-#print(game.actions(state2))
-#pb(board)
-print()
-#pb(board_find_groups(board))
-print()
-#pb(board_gravity(board))	
-
-
-
-
+def greedy_search(problem, h=None):
+    """A* search is best-first graph search with f(n) = g(n)+h(n).
+    You need to specify the h function when you call astar_search, or
+    else in your Problem subclass."""
+    h = memoize(h or problem.h, 'h')
+    return best_first_graph_search(problem, lambda n: h(n))
