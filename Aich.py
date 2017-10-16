@@ -138,8 +138,25 @@ print
 print_board(board_gravity(board))
 
 
-
 class sg_state:
 
 	def __init__(self, board):
-		this.board = board
+		self.board = board
+
+class same_game(Problem):
+
+	def __init__(self, board):
+		Problem.__init__(self, sg_state(board))
+
+	def actions(self, state):
+		"""Returns a list of possible actions (groups to pop)"""
+		return [x for x in board_find_groups(state.board) if len(x) > 1]
+
+	#def goal_test(self, state):
+
+	#def path_cost(self, c, state1, action, state2):
+
+	#def h(self, node):
+
+
+print_board( same_game(board).actions(sg_state(board)) )
