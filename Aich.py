@@ -121,21 +121,14 @@ def board_remove_group(board, group):
  			print(board[x][y], end=' ')
  		print()
 		
-		
-board = [[2,2,1,2,1],[2,2,2,1,2],[1,2,1,2,1],[1,1,1,0,0	]]
+def pb(b):
+	for x in b:
+		print(x)
 
-a = [[1,2]]
-#print([1,2] in a)
+ 		
 
-print("hello")
-#print board_find_groups(board)
-print("ended")
+board = [[3,1,3,2],[1,1,1,3],[1,3,2,1],[1,1,3,3],[3,3,1,2],[2,2,2,2],[3,1,2,3],[2,3,2,3],[2,1,1,3],[2,3,1,2]]
 
-
-
-print_board(board)
-print
-print_board(board_gravity(board))
 
 
 class sg_state:
