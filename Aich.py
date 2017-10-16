@@ -1,4 +1,5 @@
-from search import Problem
+from search import *
+from utils import *
 
 # TAI color 
 # sem cor = 0 
@@ -32,7 +33,8 @@ def board_find_groups(board):
 	for y in range(len(board)):
 		for x in range(len(board[0])):
 			if not(checkIn(make_pos(y, x), result)):
-				result.append( board_aux_find_group(board, [], y, x, board[y][x]) );
+				if board[y][x] != get_no_color():
+					result.append( board_aux_find_group(board, [], y, x, board[y][x]) );
 	return result
 
 def board_aux_find_group(board, curList, y, x, color):
@@ -64,16 +66,7 @@ def print_board(board):
 	for x in board:
 		print(x)
 
-
-def board_gravity(board):
-	for x in range(len(board[0])):
-		i = len(board) - 2
-		while i >= 0:
-			if(color(board[i][x]) and no_color(board[i+1][x])):
-				board[i+1][x] = board[i][x]
-				board[i][x]   = get_no_color()
-			i -= 1
-	return boarddef board_remove_move_side(board):
+def board_move_side(board):
  
  	ult_linha = len(board) - 1
  	colunas_zero = []
@@ -101,22 +94,32 @@ def board_gravity(board):
  
 	
 def board_gravity(board):
+	bl = len(board)
 	for x in range(len(board[0])):
 		i = len(board) - 2
 		while i >= 0:
-			if(color(board[i][x]) and no_color(board[i+1][x])):
+			if(i + 1 < bl and color(board[i][x]) and no_color(board[i+1][x])):
 				board[i+1][x] = board[i][x]
 				board[i][x]   = get_no_color()
-			i -= 1
+				i += 1
+			else:
+				i -= 1
 	return board
+
+
  
 def board_remove_group(board, group):
 
-	for x in group:
-		board[x[0]][x[1]] = 0
+	#pb(board)
+	#print()
+	#print(group)
+	#print()
 
-	board_gravity(board)
-	board_move_side(board)
+	for x in group:
+		board[pos_l(x)][pos_c(x)] = get_no_color()
+
+	board = board_gravity(board)
+	board = board_move_side(board)
 
 	return board
  
@@ -133,29 +136,51 @@ def pb(b):
 
  		
 
-board = [[3,1,3,2],[1,1,1,3],[1,3,2,1],[1,1,3,3],[3,3,1,2],[2,2,2,2],[3,1,2,3],[2,3,2,3],[2,1,1,3],[2,3,1,2]]
-
-
+#board = [[3,1,3,2],[1,1,1,3],[1,3,2,1],[1,1,3,3],[3,3,1,2],[2,2,2,2],[3,1,2,3],[2,3,2,3],[2,1,1,3],[2,3,1,2]]
 
 class sg_state:
 
 	def __init__(self, board):
 		self.board = board
 
+	def __eq__(self, other):
+		if isinstance(other, sg_state):
+			return self.board == other.board
+
 class same_game(Problem):
 
 	def __init__(self, board):
-		Problem.__init__(self, sg_state(board))
+		Problem.__init__(self, sg_state(board), sg_state([ [get_no_color() for x in range(len(board[0]))] for y in range(len(board)) ]))
 
 	def actions(self, state):
 		"""Returns a list of possible actions (groups to pop)"""
-		return [x for x in board_find_groups(state.board) if len(x) > 1]
-
-	#def goal_test(self, state):
+		a = [x for x in board_find_groups(state.board) if len(x) > 1]
+		#print(a)
+		return a#[x for x in board_find_groups(state.board) if len(x) > 1]
 
 	#def path_cost(self, c, state1, action, state2):
 
 	#def h(self, node):
 
+	def result(self, state, action):
+		return sg_state(board_remove_group(state.board, action))
 
-print_board( same_game(board).actions(sg_state(board)) )
+
+print(depth_first_tree_search(same_game([[3,1,3,2],[1,1,1,3],[1,3,2,1],[1,1,3,3],[3,3,1,2],[2,2,2,2],[3,1,2,3],[2,3,2,3],[2,1,1,3],[2,3,1,2]])).state.board)
+board = [[0, 0, 0, 0],[0, 0, 0, 0],[0, 0, 0, 0],[0, 0, 0, 0],[0, 0, 0, 0],[0, 0, 0, 0],[0, 0, 0, 0],[0, 0, 2, 0],[0, 0, 1, 0],[3, 2, 2, 0]]
+state1 = sg_state(board)
+game = same_game(board)
+#pb(board)
+#print()
+#print(game.actions(state1))
+#state2 = (game.result(state1, game.actions(state1)[0]))
+#print(game.actions(state2))
+#pb(board)
+print()
+#pb(board_find_groups(board))
+print()
+#pb(board_gravity(board))	
+
+
+
+
