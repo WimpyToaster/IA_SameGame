@@ -93,7 +93,26 @@ def board_remove_move_side(board):
  		
  	return board
  
+	
+def board_gravity(board):
+	for x in range(len(board[0])):
+		i = len(board) - 2
+		while i >= 0:
+			if(color(board[i][x]) and no_color(board[i+1][x])):
+				board[i+1][x] = board[i][x]
+				board[i][x]   = get_no_color()
+			i -= 1
+	return board
  
+def board_remove_group(board, group):
+
+	for x in group:
+		board[x[0]][x[1]] = 0
+
+	board_gravity(board)
+	board_move_side(board)
+
+	return board
  
  def print_board(board):
  
@@ -112,23 +131,11 @@ print("hello")
 #print board_find_groups(board)
 print("ended")
 
-def printboard(board):
-	for x in board:
-		print x
 
 
-def board_gravity(board):
-	for x in range(len(board[0])):
-		i = len(board) - 2
-		while i >= 0:
-			if(color(board[i][x]) and no_color(board[i+1][x])):
-				board[i+1][x] = board[i][x]
-				board[i][x]   = get_no_color()
-			i -= 1
-	return board
-printboard(board)
+print_board(board)
 print
-printboard(board_gravity(board))
+print_board(board_gravity(board))
 
 
 
