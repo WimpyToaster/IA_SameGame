@@ -1,3 +1,5 @@
+from search import Problem
+
 # TAI color 
 # sem cor = 0 
 # com cor > 0 
@@ -85,7 +87,7 @@ def board_remove_move_side(board):
  	for y in range(colunas_zero[0], ult_linha):
  		for i in range(1, len(board[0]) - y):
  			if (board[ult_linha][y+i] != 0):
- 				for x in range(ult_linha  1):
+ 				for x in range(ult_linha + 1):
  					board[x][y] = board[x][y+i]
  					board[x][y+i] = 0
  				break
@@ -114,7 +116,7 @@ def board_remove_group(board, group):
 
 	return board
  
- def print_board(board):
+def print_board(board):
  
  	for x in range( len(board) ):
  		for y in range( len(board[0]) ):
