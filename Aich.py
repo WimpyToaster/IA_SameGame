@@ -31,45 +31,49 @@ def board_find_groups(board):
 	result = []
 	for y in range(len(board)):
 		for x in range(len(board[0])):
-			if not(checkIn(make_pos(x, y), result)):
-				result.append( board_aux_find_group(board, [], x, y, board[y][x]) );
+			if not(checkIn(make_pos(y, x), result)):
+				result.append( board_aux_find_group(board, [], y, x, board[y][x]) );
 	return result
 
-def board_aux_find_group(board, curList, x, y, color):
+def board_aux_find_group(board, curList, y, x, color):
 	if x < 0 or x >= len(board[0]) or y < 0 or y >= len(board):
 		return curList
 
-	if (board[y][x] == color) and not(make_pos(x, y) in curList):
+	if (board[y][x] == color) and not(make_pos(y, x) in curList):
 		# UP
-		curList.append(make_pos(x, y))
-		print(curList)
-		print
-		print
-		print
+		curList.append(make_pos(y, x))
 
-		if not(make_pos(x, y-1) in curList):
-			print("UP")
-			curList = board_aux_find_group(board, curList, x, y-1, color)
+		if not(make_pos(y-1, x) in curList):
+			curList = board_aux_find_group(board, curList, y-1, x, color)
 		# DWN
-		if not(make_pos(x, y+1) in curList):
-			print("DWN")
-			curList = board_aux_find_group(board, curList, x, y+1, color)
+		if not(make_pos(y+1, x) in curList):
+			curList = board_aux_find_group(board, curList, y+1, x, color)
 		# LFT
 		#print([x-1, y] in curList)
-		if not(make_pos(x-1, y) in curList):
-			print("LFT")
-			curList = board_aux_find_group(board, curList, x-1, y, color)
+		if not(make_pos(y, x-1) in curList):
+			curList = board_aux_find_group(board, curList, y, x-1, color)
 		# RGT
 		#print([x+1, y] in curList)
-		if not(make_pos(x+1, y) in curList):
-			print("RGT")
-			curList = board_aux_find_group(board, curList, x+1, y, color)
+		if not(make_pos(y, x+1) in curList):
+			curList = board_aux_find_group(board, curList, y, x+1, color)
 
 
 	return curList
 
+def print_board(board):
+	for x in board:
+		print(x)
 
-def board_remove_move_side(board):
+
+def board_gravity(board):
+	for x in range(len(board[0])):
+		i = len(board) - 2
+		while i >= 0:
+			if(color(board[i][x]) and no_color(board[i+1][x])):
+				board[i+1][x] = board[i][x]
+				board[i][x]   = get_no_color()
+			i -= 1
+	return boarddef board_remove_move_side(board):
  
  	ult_linha = len(board) - 1
  	colunas_zero = []
