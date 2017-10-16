@@ -66,52 +66,33 @@ def board_aux_find_group(board, curList, x, y, color):
 
 	return curList
 
-
-def board_remove_move_side(board):
-
-	ult_linha = len(board) - 1
-	colunas_zero = []
-	do_it = False
-
-	for i in range(len(board[0])):
-		if (board[ult_linha][i] == 0):
-			do_it = True
-			colunas_zero.append(i)
-
-	if (not do_it):
-		return board
-
-
-	for y in range(colunas_zero[0], ult_linha):
-		for i in range(1, len(board[0]) - y):
-			if (board[ult_linha][y+i] != 0):
-				for x in range(ult_linha + 1):
-					board[x][y] = board[x][y+i]
-					board[x][y+i] = 0
-				break
-					
-		
-	return board
-
-
-
-def print_board(board):
-
-	for x in range( len(board) ):
-		for y in range( len(board[0]) ):
-			print(board[x][y], end=' ')
-		print()
-
-		
-		
-board = [[2,2,1,2,1],[2,2,2,1,2],[1,2,1,2,1],[2,1,2,1,2]]
+board = [[2,2,1,2,1],[2,2,2,1,2],[1,2,1,2,1],[1,1,1,0,0	]]
 
 a = [[1,2]]
 #print([1,2] in a)
 
 print("hello")
-print board_find_groups(board)
+#print board_find_groups(board)
 print("ended")
+
+def printboard(board):
+	for x in board:
+		print x
+
+
+def board_gravity(board):
+	for x in range(len(board[0])):
+		i = len(board) - 2
+		while i >= 0:
+			if(color(board[i][x]) and no_color(board[i+1][x])):
+				board[i+1][x] = board[i][x]
+				board[i][x]   = get_no_color()
+			i -= 1
+	return board
+printboard(board)
+print
+printboard(board_gravity(board))
+
 
 
 class sg_state:
